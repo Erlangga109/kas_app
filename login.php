@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['username'] = $user_data['username'];
             $_SESSION['role']     = $user_data['role'];
 
-            header("Location: dashboard.php");
+            header("Location: index.php");
             exit;
         } else {
             $errors['login'] = 'Username atau password salah.';
