@@ -4,17 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <title>Aplikasi Kas Sederhana</title>
-    <link rel="stylesheet" href="assets/style.css?v=1.1">
+    <link rel="stylesheet" href="assets/style.css?v=1.2">
 </head>
 <body>
 <div class="container">
     <h1>Aplikasi Kas Sederhana</h1>
 
+    <div class="action-buttons">
+        <a href="tambah_anak.php" class="btn-add">+ Tambah Anak</a>
+    </div>
+
     <form action="tambah.php" method="POST" class="form">
         <label>Nama Anak:</label>
         <input type="text" name="nama" list="nama-list" required>
         <?php
-        $nama_result = $conn->query("SELECT DISTINCT nama FROM kas");
+        $nama_result = $conn->query("SELECT nama FROM anak ORDER BY nama ASC");
         echo '<datalist id="nama-list">';
         while ($nama_row = $nama_result->fetch_assoc()) {
             echo '<option value="' . htmlspecialchars($nama_row['nama']) . '">';
@@ -46,7 +50,7 @@
         </thead>
         <tbody>
             <?php
-            $result = $conn->query("SELECT * FROM kas ORDER BY id DESC");
+            $result = $conn->query("SELECT k.id, a.nama, k.jumlah, k.tanggal FROM kas k JOIN anak a ON k.anak_id = a.id ORDER BY k.id DESC");
             $no = 1; $total = 0;
             while ($row = $result->fetch_assoc()):
                 $total += $row['jumlah'];
@@ -74,7 +78,15 @@
 <h2>Pembayaran QRIS</h2>
 <form id="qris-form">
     <label>Nama Pembayar:</label>
-    <input type="text" id="qris-nama" placeholder="Masukkan nama" required>
+    <input type="text" id="qris-nama" list="qris-nama-list" placeholder="Masukkan nama" required>
+    <?php
+    $qris_nama_result = $conn->query("SELECT nama FROM anak ORDER BY nama ASC");
+    echo '<datalist id="qris-nama-list">';
+    while ($qris_row = $qris_nama_result->fetch_assoc()) {
+        echo '<option value="' . htmlspecialchars($qris_row['nama']) . '">';
+    }
+    echo '</datalist>';
+    ?>
 
     <label>Jumlah Pembayaran:</label>
     <select id="qris-jumlah" required>
@@ -96,7 +108,7 @@
 
 <!-- Library QRCode -->
 <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
-<script src="assets/script.js?v=1.2"></script>
+<script src="assets/script.js?v=1.3"></script>
 
 </div>
 </body>
